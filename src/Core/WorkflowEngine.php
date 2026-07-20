@@ -2,10 +2,12 @@
 
 namespace SolutionForest\WorkflowEngine\Core;
 
+use SolutionForest\WorkflowEngine\Actions\HumanTaskAction;
 use SolutionForest\WorkflowEngine\Contracts\EventDispatcher;
 use SolutionForest\WorkflowEngine\Contracts\StorageAdapter;
 use SolutionForest\WorkflowEngine\Events\WorkflowCancelledEvent;
 use SolutionForest\WorkflowEngine\Events\WorkflowStartedEvent;
+use SolutionForest\WorkflowEngine\Exceptions\InvalidWorkflowDefinitionException;
 use SolutionForest\WorkflowEngine\Exceptions\InvalidWorkflowStateException;
 use SolutionForest\WorkflowEngine\Exceptions\WorkflowInstanceNotFoundException;
 
@@ -94,7 +96,7 @@ class WorkflowEngine
      * @param array<string, mixed> $context Initial context data for the workflow
      * @return string The workflow instance ID
      *
-     * @throws \SolutionForest\WorkflowEngine\Exceptions\InvalidWorkflowDefinitionException If the workflow definition is invalid
+     * @throws InvalidWorkflowDefinitionException If the workflow definition is invalid
      * @throws \RuntimeException If the workflow cannot be started due to system issues
      *
      * @example Starting a simple workflow
@@ -209,8 +211,8 @@ class WorkflowEngine
         }
 
         $actionClass = $step->getActionClass();
-        if ($actionClass !== \SolutionForest\WorkflowEngine\Actions\HumanTaskAction::class
-            && ! is_a((string) $actionClass, \SolutionForest\WorkflowEngine\Actions\HumanTaskAction::class, true)) {
+        if ($actionClass !== HumanTaskAction::class
+            && ! is_a((string) $actionClass, HumanTaskAction::class, true)) {
             throw new \RuntimeException("Current step '{$stepId}' is not a human task");
         }
 

@@ -2,6 +2,7 @@
 
 use SolutionForest\WorkflowEngine\Core\WorkflowEngine;
 use SolutionForest\WorkflowEngine\Core\WorkflowState;
+use SolutionForest\WorkflowEngine\Exceptions\InvalidWorkflowStateException;
 use SolutionForest\WorkflowEngine\Tests\Support\InMemoryStorage;
 
 beforeEach(function () {
@@ -120,5 +121,5 @@ test('completeHumanTask rejects when not waiting', function () {
     $id = $this->engine->start('human-4', $definition);
 
     expect(fn () => $this->engine->completeHumanTask($id, 'lengkap'))
-        ->toThrow(\SolutionForest\WorkflowEngine\Exceptions\InvalidWorkflowStateException::class);
+        ->toThrow(InvalidWorkflowStateException::class);
 });

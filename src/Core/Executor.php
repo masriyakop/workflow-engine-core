@@ -3,6 +3,7 @@
 namespace SolutionForest\WorkflowEngine\Core;
 
 use Exception;
+use SolutionForest\WorkflowEngine\Actions\HumanTaskAction;
 use SolutionForest\WorkflowEngine\Contracts\EventDispatcher;
 use SolutionForest\WorkflowEngine\Contracts\Logger;
 use SolutionForest\WorkflowEngine\Contracts\WorkflowAction;
@@ -193,8 +194,8 @@ class Executor
         foreach ($nextSteps as $step) {
             if ($instance->isStepCompleted($step->getId())) {
                 // Allow human tasks to re-open after kemaskini loops
-                if ($step->getActionClass() === \SolutionForest\WorkflowEngine\Actions\HumanTaskAction::class
-                    || is_a((string) $step->getActionClass(), \SolutionForest\WorkflowEngine\Actions\HumanTaskAction::class, true)) {
+                if ($step->getActionClass() === HumanTaskAction::class
+                    || is_a((string) $step->getActionClass(), HumanTaskAction::class, true)) {
                     $this->stateManager->unmarkStepCompleted($instance, $step->getId());
                     // Also clear prior completion payload so the gate waits again
                     $data = $instance->getData();
@@ -325,7 +326,7 @@ class Executor
         for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
             try {
                 return $this->executeAction($instance, $step);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $lastException = $e;
 
                 if ($attempt === $maxAttempts) {
@@ -397,7 +398,7 @@ class Executor
             pcntl_alarm(0);
 
             return $result;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             pcntl_alarm(0);
 
             throw $e;

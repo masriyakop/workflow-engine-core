@@ -66,7 +66,6 @@ class HumanTaskAction extends BaseAction
     }
 
     /**
-     * @param mixed $outcomes
      * @return list<string>
      */
     private function normalizeOutcomes(mixed $outcomes): array
